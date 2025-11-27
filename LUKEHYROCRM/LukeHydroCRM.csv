@@ -1,39 +1,39 @@
-Date Contacted,PIC,Business,Number,Location,Attempts,Notes,Probability,Email,Business Type
-10/27/25,?,Hydro City,(916) 388-8333,"Sacramento, CA",1,Call+E,70%,hydrocity888@gmail.com,Hydroponics
-10/27/25,?,Roots Garden Supply,(503) 788-GROW,"Portland, OR",1,Well stocked already - Call+E,50%,info@rootsgardensupply,Garden Supply
-10/27/25,Max (Sales),Endless Summer Garden Supply,(707) 826-7435,"Eureka, CA",1,Can email - no talk - Call+E,65%,max@endlessgardensupply.com,Garden Supply
-10/27/25,Adrian,LA Garden Supply,(310) 817-5593,"Los Angeles, CA",1,About to close - send email - Call+E,55%,adrian@lagardensupply.com,Garden Supply
-10/28/25,Jake,Golden Valley Hydroponics,(530) 763-2151,"Yuba City, CA",1,c+email,60%,goldenvalleyhydroponics@gmail.com,Hydroponics
-10/28/25,Keith,Garden Grove Hydro & Nursery Supply,(714) 591-5105,"Garden Grove, CA",1,c+E,70%,keith.ngu@gghydrosupply.com,Hydro & Nursery
-10/28/25,Franco,Northern Roots,(530) 244-7891,"Redding, CA",1,They said thursday Franco 8-6,65%,,Garden Supply
-10/28/25,?,Green Coast Hydroponics Long Beach,(562) 517-1867,"Long Beach, CA",1,Said tomorrow 9am,75%,,Hydroponics
-10/28/25,"Tony, Adrian",Hydro Pacific Garden Supply,(707) 467-0400,"Ukiah, CA",1,Spoke with Tony (owner's right hand) - Email purchaser,72%,adrianhydro@yahoo.com,Hydro & Garden
-10/29/25,"Tracy, Jennifer",Greenmile Hydroponic Garden Supply,Email Only,"San Bernardino, CA",1,Attention Tracy and Jennifer,60%,greenmilehydro@gmail.com,Hydroponics
-10/29/25,Eric,Humboldt Hydroponics,(707) 443-4304,"Eureka, CA",1,c+E,68%,eric@humboldthydroponics.com,Hydroponics
-10/29/25,Gabriel,Hydroponics Direct,(951) 784-5733,"Riverside, CA",1,,65%,hydrodirect.gt@gmail.com,Hydroponics
-10/29/25,Mo,High Desert Hydroponics,Email Only,"Apple Valley, CA",1,,58%,hdhydroponics@gmail.com,Hydroponics
-10/29/25,?,AG Hydroponics,(209) 649-8227,"Stockton, CA",1,Call again in hour,70%,ag.essentialhydroponics@gmail.com,Hydroponics
-10/31/25,?,SummerWinds Nursery District Office,408-866-0970,"Campbell, CA",1,Left a voicemail,60%,,Nursery Chain
-10/31/25,Sandy Pool,Calloway's Nursery,na,Call Trail,1,Are they also in charge of Cornelius Nursery?,55%,spool@calloways.com,Nursery Chain
-10/31/25,?,No Stress Hydroponics,(818) 806-4500,"Glendale, CA",1,Call in an hour,70%,,Hydroponics
-10/31/25,?,Way To Grow,(303) 296-7900,"Denver, CO",1,Passing my info to people in charge,70%,,Garden Supply
-10/31/25,?,GreenCoast Hydroponics,(213) 335-8833,"Los Angeles, CA",1,Left a voicemail,70%,,Hydroponics
-10/31/25,Corporate,Armstrong Garden Centers,18002291707,Multiple Locations,1,Left VM for corp marketing,55%,,Garden Center Chain
-10/31/25,?,Pistils Nursery,(503) 288-4909,"Portland, OR",1,Left VM - Mom and pop?,50%,,Nursery
-10/31/25,?,Buchanan's Native Plants,(713) 861-5702,"Houston, TX",1,Left VM - Mom and pop,55%,,Specialty Nursery
-10/31/25,?,Garden Gate Shop,(314) 577-5137,"St. Louis, MO",1,Part of Missouri Botanical Garden? Left VM,40%,,Garden Shop
-10/31/25,?,NY Botanical Garden Shop,(718) 817-8700,"Bronx, NY",1,Closed when called,40%,,Garden Shop
-10/31/25,,Pike Nurseries,(404) 843-9578,"Atlanta, GA",1,Closed when called,55%,,Nursery Chain
-10/31/25,Jimmy (Buyer?),Portland Nursery,(503) 788-9000,"Portland, OR",1,,58%,jimmym@portlandnursery.com,Nursery
-10/31/25,?,NorCal Garden Supply,(707) 995-2030,"Clearlake, CA",1,Don't do much hydroponics - what's my angle?,35%,,Garden Supply
-10/31/25,Marketing/Purchasing,Sloat Garden Center,(415) 332-0657,"Sausalito, CA",1,Left VM,32%,,Garden Center
-11/1/25,Karen,Green Thumb Nursery,(949) 837-3040,"Lake Forest, CA",1,,30%,karens@greenthumb.com,Nursery
-11/1/25,Purchasing,Rolling Greens,(310) 559-8656,"Los Angeles, CA",1,c+e but email only,45%,purchasing@rg-ca.com,Garden Center
-11/1/25,Hayley (Purchasing?),Homestead Gardens,(410) 798-5000,"Davidsonville, MD",1,,30%,Hayley.Ross@homesteadgardens.com,Garden Center
-11/1/25,Peter??,Weston Nurseries,(508) 293-8026,"Hopkinton, MA",1,Left a VM,33%,,Nursery
-11/3/25,?,Stauffers of Kissel Hill,(717) 626-4771,"Lititz, PA",0,Closes at 4,28%,,Garden Center
-11/3/25,?,PlantShed,(212) 662-4400,"New York, NY",0,Closed - NY hours,40%,,Plant Shop
-11/3/25,Buyers,The Huntington Store,(626) 405-2142,"San Marino, CA",0,Get in contact with buyers,38%,thestore@huntington.org,Botanical Garden
-11/3/25,Buyer,Desert Botanical Garden,(480) 941-1225,"Phoenix, AZ",0,Get in contact with buyer,35%,,Botanical Garden
-11/3/25,Zann or Phui (Buyers),Flora Grubb Gardens,(415) 626-7256,"San Francisco, CA",0,,45%,buyers@florgrubb.com,Garden Center
-11/4/25,Tom,Cultivate Hydroponics & Garden Supply,(405) 415-9480,"Oklahoma City, OK",0,Call tomorrow,55%,,Hydroponics
+Date Contacted,PIC,Business,Number,Location,Attempts,Notes,Probability,Email,Business Type,Starred
+10/27/25,?,Hydro City,(916) 388-8333,"Sacramento, CA",1,Call+E,70%,hydrocity888@gmail.com,Hydroponics,false
+10/27/25,?,Roots Garden Supply,(503) 788-GROW,"Portland, OR",1,Well stocked already - Call+E,50%,info@rootsgardensupply,Garden Supply,false
+10/27/25,Max (Sales),Endless Summer Garden Supply,(707) 826-7435,"Eureka, CA",1,Can email - no talk - Call+E,65%,max@endlessgardensupply.com,Garden Supply,false
+10/27/25,Adrian,LA Garden Supply,(310) 817-5593,"Los Angeles, CA",1,About to close - send email - Call+E,55%,adrian@lagardensupply.com,Garden Supply,false
+10/28/25,Jake,Golden Valley Hydroponics,(530) 763-2151,"Yuba City, CA",1,c+email,60%,goldenvalleyhydroponics@gmail.com,Hydroponics,false
+10/28/25,Keith,Garden Grove Hydro & Nursery Supply,(714) 591-5105,"Garden Grove, CA",1,c+E,70%,keith.ngu@gghydrosupply.com,Hydro & Nursery,false
+10/28/25,Franco,Northern Roots,(530) 244-7891,"Redding, CA",1,They said thursday Franco 8-6,65%,,Garden Supply,false
+10/28/25,?,Green Coast Hydroponics Long Beach,(562) 517-1867,"Long Beach, CA",1,Said tomorrow 9am,75%,,Hydroponics,false
+10/28/25,"Tony, Adrian",Hydro Pacific Garden Supply,(707) 467-0400,"Ukiah, CA",1,Spoke with Tony (owner's right hand) - Email purchaser,72%,adrianhydro@yahoo.com,Hydro & Garden,false
+10/29/25,"Tracy, Jennifer",Greenmile Hydroponic Garden Supply,Email Only,"San Bernardino, CA",1,Attention Tracy and Jennifer,60%,greenmilehydro@gmail.com,Hydroponics,false
+10/29/25,Eric,Humboldt Hydroponics,(707) 443-4304,"Eureka, CA",1,c+E,68%,eric@humboldthydroponics.com,Hydroponics,false
+10/29/25,Gabriel,Hydroponics Direct,(951) 784-5733,"Riverside, CA",1,,65%,hydrodirect.gt@gmail.com,Hydroponics,false
+10/29/25,Mo,High Desert Hydroponics,Email Only,"Apple Valley, CA",1,,58%,hdhydroponics@gmail.com,Hydroponics,false
+10/29/25,?,AG Hydroponics,(209) 649-8227,"Stockton, CA",1,Call again in hour,70%,ag.essentialhydroponics@gmail.com,Hydroponics,false
+10/31/25,?,SummerWinds Nursery District Office,408-866-0970,"Campbell, CA",1,Left a voicemail,60%,,Nursery Chain,false
+10/31/25,Sandy Pool,Calloway's Nursery,na,Call Trail,1,Are they also in charge of Cornelius Nursery?,55%,spool@calloways.com,Nursery Chain,false
+10/31/25,?,No Stress Hydroponics,(818) 806-4500,"Glendale, CA",1,Call in an hour,70%,,Hydroponics,false
+10/31/25,?,Way To Grow,(303) 296-7900,"Denver, CO",1,Passing my info to people in charge,70%,,Garden Supply,false
+10/31/25,?,GreenCoast Hydroponics,(213) 335-8833,"Los Angeles, CA",1,Left a voicemail,70%,,Hydroponics,false
+10/31/25,Corporate,Armstrong Garden Centers,18002291707,Multiple Locations,1,Left VM for corp marketing,55%,,Garden Center Chain,false
+10/31/25,?,Pistils Nursery,(503) 288-4909,"Portland, OR",1,Left VM - Mom and pop?,50%,,Nursery,false
+10/31/25,?,Buchanan's Native Plants,(713) 861-5702,"Houston, TX",1,Left VM - Mom and pop,55%,,Specialty Nursery,false
+10/31/25,?,Garden Gate Shop,(314) 577-5137,"St. Louis, MO",1,Part of Missouri Botanical Garden? Left VM,40%,,Garden Shop,false
+10/31/25,?,NY Botanical Garden Shop,(718) 817-8700,"Bronx, NY",1,Closed when called,40%,,Garden Shop,false
+10/31/25,,Pike Nurseries,(404) 843-9578,"Atlanta, GA",1,Closed when called,55%,,Nursery Chain,false
+10/31/25,Jimmy (Buyer?),Portland Nursery,(503) 788-9000,"Portland, OR",1,,58%,jimmym@portlandnursery.com,Nursery,false
+10/31/25,?,NorCal Garden Supply,(707) 995-2030,"Clearlake, CA",1,Don't do much hydroponics - what's my angle?,35%,,Garden Supply,false
+10/31/25,Marketing/Purchasing,Sloat Garden Center,(415) 332-0657,"Sausalito, CA",1,Left VM,32%,,Garden Center,false
+11/1/25,Karen,Green Thumb Nursery,(949) 837-3040,"Lake Forest, CA",1,,30%,karens@greenthumb.com,Nursery,false
+11/1/25,Purchasing,Rolling Greens,(310) 559-8656,"Los Angeles, CA",1,c+e but email only,45%,purchasing@rg-ca.com,Garden Center,false
+11/1/25,Hayley (Purchasing?),Homestead Gardens,(410) 798-5000,"Davidsonville, MD",1,,30%,Hayley.Ross@homesteadgardens.com,Garden Center,false
+11/1/25,Peter??,Weston Nurseries,(508) 293-8026,"Hopkinton, MA",1,Left a VM,33%,,Nursery,false
+11/3/25,?,Stauffers of Kissel Hill,(717) 626-4771,"Lititz, PA",0,Closes at 4,28%,,Garden Center,false
+11/3/25,?,PlantShed,(212) 662-4400,"New York, NY",0,Closed - NY hours,40%,,Plant Shop,false
+11/3/25,Buyers,The Huntington Store,(626) 405-2142,"San Marino, CA",0,Get in contact with buyers,38%,thestore@huntington.org,Botanical Garden,false
+11/3/25,Buyer,Desert Botanical Garden,(480) 941-1225,"Phoenix, AZ",0,Get in contact with buyer,35%,,Botanical Garden,false
+11/3/25,Zann or Phui (Buyers),Flora Grubb Gardens,(415) 626-7256,"San Francisco, CA",0,,45%,buyers@florgrubb.com,Garden Center,false
+11/4/25,Tom,Cultivate Hydroponics & Garden Supply,(405) 415-9480,"Oklahoma City, OK",0,Call tomorrow,55%,,Hydroponics,false

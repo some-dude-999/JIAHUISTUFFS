@@ -607,6 +607,7 @@
             <button class="btn btn-add" onclick="openAddModal()">✨ Add Contact</button>
             <button class="btn btn-export" onclick="exportToCSV()">💾 Export CSV</button>
             <button class="btn" onclick="importFromCSV()">📥 Reload Data</button>
+            <button class="btn" onclick="setupGitHubToken()" style="background: linear-gradient(135deg, #764ba2, #667eea);">🔐 Setup GitHub Auto-Save</button>
         </div>
 
         <!-- Table -->
@@ -716,50 +717,94 @@
         let contacts = [];
         let editingIndex = -1;
 
-        // Backend API configuration
-        const API_URL = 'http://localhost:5000/api';
-        let useBackend = true;
+        // GitHub API Configuration
+        const GITHUB_OWNER = 'some-dude-999';
+        const GITHUB_REPO = 'JIAHUISTUFFS';
+        const CSV_PATH = 'LUKEHYROCRM/LukeHydroCRM.csv';
+        const GITHUB_TOKEN = localStorage.getItem('github_token') || '';
 
-        // Check if backend is available
-        async function checkBackend() {
+        // GitHub API - Save to CSV
+        async function saveToGitHub() {
+            if (!GITHUB_TOKEN) {
+                console.log('⚠️ No GitHub token - saving to localStorage only');
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                return;
+            }
+
             try {
-                const response = await fetch(`${API_URL}/health`, { method: 'GET' });
-                useBackend = response.ok;
-                if (useBackend) {
-                    console.log('✅ Backend connected!');
+                // Get current file SHA (needed for update)
+                const getResponse = await fetch(
+                    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CSV_PATH}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+
+                if (!getResponse.ok) {
+                    throw new Error('Failed to get file');
+                }
+
+                const fileData = await getResponse.json();
+                const sha = fileData.sha;
+
+                // Generate CSV content
+                const headers = ['Date Contacted', 'PIC', 'Business', 'Number', 'Location', 'Attempts', 'Notes', 'Probability', 'Email', 'Business Type', 'Starred'];
+                const rows = contacts.map(c => [
+                    c.date || '',
+                    c.pic || '',
+                    c.business || '',
+                    c.number || '',
+                    c.location || '',
+                    c.attempts || '0',
+                    `"${(c.notes || '').replace(/"/g, '""')}"`,
+                    c.probability || '',
+                    c.email || '',
+                    c.businessType || '',
+                    c.starred ? 'true' : 'false'
+                ]);
+                const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+
+                // Encode to base64
+                const encodedContent = btoa(unescape(encodeURIComponent(csvContent)));
+
+                // Commit to GitHub
+                const commitResponse = await fetch(
+                    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CSV_PATH}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Update CRM data - ${new Date().toISOString()}`,
+                            content: encodedContent,
+                            sha: sha
+                        })
+                    }
+                );
+
+                if (commitResponse.ok) {
+                    console.log('✅ Saved to GitHub!');
+                    // Also save to localStorage as backup
+                    localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
                 } else {
-                    console.log('⚠️ Backend unavailable, using localStorage');
+                    throw new Error('Failed to commit');
                 }
             } catch (error) {
-                useBackend = false;
-                console.log('⚠️ Backend unavailable, using localStorage');
+                console.error('❌ GitHub save failed:', error);
+                // Fallback to localStorage
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                console.log('💾 Saved to localStorage (backup)');
             }
         }
 
-        // Save to backend or localStorage
-        async function saveContacts() {
-            if (useBackend) {
-                try {
-                    const response = await fetch(`${API_URL}/contacts/bulk`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contacts })
-                    });
-                    const data = await response.json();
-                    if (data.success) {
-                        console.log('💾 Saved to CSV');
-                    }
-                } catch (error) {
-                    console.error('❌ Failed to save to backend:', error);
-                    // Fallback to localStorage
-                    localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
-                }
-            } else {
-                // Save to localStorage
-                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
-                console.log('💾 Saved to localStorage');
-            }
-        }
+        // Alias for compatibility
+        const saveContacts = saveToGitHub;
 
         // Load from localStorage
         function loadFromLocalStorage() {
@@ -811,47 +856,45 @@
 
         // Load CSV data
         async function importFromCSV() {
-            if (useBackend) {
+            // Try loading from GitHub API first if token exists
+            if (GITHUB_TOKEN) {
                 try {
-                    const response = await fetch(`${API_URL}/contacts`);
-                    const data = await response.json();
+                    const response = await fetch(
+                        `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CSV_PATH}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${GITHUB_TOKEN}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
 
-                    if (data.success) {
-                        contacts = data.contacts.map(c => ({
-                            date: c['Date Contacted'] || c.date || '',
-                            pic: c['PIC'] || c.pic || '',
-                            business: c['Business'] || c.business || '',
-                            number: c['Number'] || c.number || '',
-                            location: c['Location'] || c.location || '',
-                            attempts: c['Attempts'] || c.attempts || '0',
-                            notes: c['Notes'] || c.notes || '',
-                            probability: c['Probability'] || c.probability || '',
-                            email: c['Email'] || c.email || '',
-                            businessType: c['Business Type'] || c.businessType || '',
-                            starred: c.starred || false
-                        }));
-                        console.log('📥 Loaded from backend:', contacts.length, 'contacts');
+                    if (response.ok) {
+                        const data = await response.json();
+                        const csvText = decodeURIComponent(escape(atob(data.content)));
+                        parseCSV(csvText);
+                        console.log('📥 Loaded from GitHub:', contacts.length, 'contacts');
                         renderTable();
                         updateStats();
+                        return;
                     }
                 } catch (error) {
-                    console.error('Error loading from backend:', error);
-                    // Fallback to localStorage
-                    loadFromLocalStorage();
+                    console.error('Error loading from GitHub:', error);
                 }
-            } else {
-                // Try loading from CSV file (for GitHub Pages)
-                try {
-                    const response = await fetch('LukeHydroCRM.csv');
-                    const csvText = await response.text();
-                    parseCSV(csvText);
-                    renderTable();
-                    updateStats();
-                } catch (error) {
-                    console.error('Error loading CSV:', error);
-                    // Fallback to localStorage
-                    loadFromLocalStorage();
-                }
+            }
+
+            // Fallback: Try loading from CSV file directly
+            try {
+                const response = await fetch('LukeHydroCRM.csv');
+                const csvText = await response.text();
+                parseCSV(csvText);
+                console.log('📥 Loaded from CSV file:', contacts.length, 'contacts');
+                renderTable();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                // Final fallback to localStorage
+                loadFromLocalStorage();
             }
         }
 
@@ -876,7 +919,7 @@
                             probability: values[7],
                             email: values[8],
                             businessType: values[9],
-                            starred: false  // Initialize as not starred
+                            starred: values[10] === 'true'  // Read starred from CSV
                         });
                     }
                 }
@@ -1146,12 +1189,39 @@
             }
         }
 
+        // Setup GitHub Token
+        function setupGitHubToken() {
+            const token = prompt('Enter your GitHub Personal Access Token:\n\nTo create one:\n1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)\n2. Generate new token (classic)\n3. Select "repo" scope\n4. Copy the token and paste here');
+
+            if (token) {
+                localStorage.setItem('github_token', token);
+                alert('✅ GitHub token saved! Changes will now auto-save to GitHub.\n\nRefresh the page to start using it.');
+                location.reload();
+            }
+        }
+
+        // Remove GitHub Token
+        function removeGitHubToken() {
+            if (confirm('Remove GitHub token? Changes will only save to browser localStorage.')) {
+                localStorage.removeItem('github_token');
+                alert('Token removed. Refresh the page.');
+                location.reload();
+            }
+        }
+
         // Initialize
         async function init() {
             createStars();
             createEmojiRain();
-            await checkBackend();
             await importFromCSV();
+
+            // Show setup message if no token
+            if (!GITHUB_TOKEN) {
+                console.log('⚠️ No GitHub token configured. Changes will save to localStorage only.');
+                console.log('💡 To enable auto-save to GitHub, run: setupGitHubToken()');
+            } else {
+                console.log('✅ GitHub auto-save enabled!');
+            }
         }
 
         init();

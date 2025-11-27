@@ -1,8 +1,16 @@
-# Luke Hydro CRM - Backend Setup Guide
+# Luke Hydro CRM - Setup Guide
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Recommended: GitHub Auto-Save)
 
-### Option 1: Run Locally with Backend (Recommended for Auto-Save)
+### ✨ NEW: GitHub Auto-Save (No Local Server Needed!)
+
+**Best option:** Auto-saves directly to GitHub - works from anywhere!
+
+👉 **See [SETUP.md](SETUP.md) for quick 2-minute setup**
+
+---
+
+## Alternative: Run Locally with Backend
 
 1. **Install Python dependencies:**
    ```bash

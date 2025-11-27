@@ -717,14 +717,24 @@
         let contacts = [];
         let editingIndex = -1;
 
-        // GitHub API Configuration
+        // ⚙️ CONFIGURATION - Choose Your Backend
+        const USE_GOOGLE_SHEETS = true;  // Set to true for Google Sheets (NO TOKEN NEEDED!)
+        const APPS_SCRIPT_URL = '';  // Paste your Google Apps Script Web App URL here
+
+        // GitHub API Configuration (alternative - requires token)
         const GITHUB_OWNER = 'some-dude-999';
         const GITHUB_REPO = 'JIAHUISTUFFS';
         const CSV_PATH = 'LUKEHYROCRM/LukeHydroCRM.csv';
         const GITHUB_TOKEN = localStorage.getItem('github_token') || '';
 
-        // GitHub API - Save to CSV
+        // Save to backend (Google Sheets or GitHub)
         async function saveToGitHub() {
+            // Use Google Sheets if configured
+            if (USE_GOOGLE_SHEETS && APPS_SCRIPT_URL) {
+                return saveToGoogleSheets();
+            }
+
+            // Otherwise use GitHub API
             if (!GITHUB_TOKEN) {
                 console.log('⚠️ No GitHub token - saving to localStorage only');
                 localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
@@ -803,6 +813,32 @@
             }
         }
 
+        // Google Sheets save function
+        async function saveToGoogleSheets() {
+            if (!APPS_SCRIPT_URL) {
+                console.log('⚠️ No Google Sheets URL - saving to localStorage only');
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                return;
+            }
+
+            try {
+                await fetch(APPS_SCRIPT_URL + '?action=save', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contacts })
+                });
+
+                console.log('✅ Saved to Google Sheets!');
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+
+            } catch (error) {
+                console.error('❌ Google Sheets save failed:', error);
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                console.log('💾 Saved to localStorage (backup)');
+            }
+        }
+
         // Alias for compatibility
         const saveContacts = saveToGitHub;
 
@@ -856,7 +892,37 @@
 
         // Load CSV data
         async function importFromCSV() {
-            // Try loading from GitHub API first if token exists
+            // Try Google Sheets first if configured
+            if (USE_GOOGLE_SHEETS && APPS_SCRIPT_URL) {
+                try {
+                    const response = await fetch(APPS_SCRIPT_URL + '?action=get');
+                    const data = await response.json();
+
+                    if (data.success && data.contacts) {
+                        contacts = data.contacts.map(c => ({
+                            date: c['Date Contacted'] || '',
+                            pic: c['PIC'] || '',
+                            business: c['Business'] || '',
+                            number: c['Number'] || '',
+                            location: c['Location'] || '',
+                            attempts: c['Attempts'] || '0',
+                            notes: c['Notes'] || '',
+                            probability: c['Probability'] || '',
+                            email: c['Email'] || '',
+                            businessType: c['Business Type'] || '',
+                            starred: c['Starred'] === 'true'
+                        }));
+                        console.log('📥 Loaded from Google Sheets:', contacts.length, 'contacts');
+                        renderTable();
+                        updateStats();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error loading from Google Sheets:', error);
+                }
+            }
+
+            // Try loading from GitHub API if token exists
             if (GITHUB_TOKEN) {
                 try {
                     const response = await fetch(
@@ -1215,12 +1281,14 @@
             createEmojiRain();
             await importFromCSV();
 
-            // Show setup message if no token
-            if (!GITHUB_TOKEN) {
-                console.log('⚠️ No GitHub token configured. Changes will save to localStorage only.');
-                console.log('💡 To enable auto-save to GitHub, run: setupGitHubToken()');
-            } else {
+            // Show setup message
+            if (USE_GOOGLE_SHEETS && APPS_SCRIPT_URL) {
+                console.log('✅ Google Sheets auto-save enabled! (No token needed)');
+            } else if (GITHUB_TOKEN) {
                 console.log('✅ GitHub auto-save enabled!');
+            } else {
+                console.log('⚠️ No backend configured. Changes save to localStorage only.');
+                console.log('💡 See GOOGLE_SHEETS_SETUP.md for easy setup (no token needed!)');
             }
         }
 

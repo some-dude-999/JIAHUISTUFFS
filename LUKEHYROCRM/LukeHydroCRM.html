@@ -121,8 +121,6 @@
             right: -2px;
             bottom: -2px;
             background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe, #00f2fe);
-            background-size: 400% 400%;
-            animation: galaxyRotate 10s ease infinite;
             border-radius: 20px;
             z-index: -1;
         }
@@ -222,7 +220,8 @@
         .table-container {
             background: rgba(26, 10, 46, 0.7);
             border-radius: 20px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
             border: 2px solid rgba(138, 43, 226, 0.3);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
@@ -230,6 +229,7 @@
 
         table {
             width: 100%;
+            min-width: 1200px;
             border-collapse: collapse;
         }
 
@@ -540,11 +540,40 @@
             border: 1px solid rgba(79, 172, 254, 0.4);
             color: #4facfe;
         }
+
+        /* Emoji Rain */
+        .emoji-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: fall linear;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Cosmic Stars Background -->
     <div class="stars" id="stars"></div>
+
+    <!-- Emoji Rain -->
+    <div class="emoji-rain" id="emojiRain"></div>
 
     <div class="container">
         <header>
@@ -588,7 +617,7 @@
                         <th style="width: 50px;">⭐</th>
                         <th onclick="sortTable(0)">Date</th>
                         <th onclick="sortTable(1)">Business</th>
-                        <th onclick="sortTable(2)">Contact</th>
+                        <th onclick="sortTable(2)">PIC</th>
                         <th onclick="sortTable(3)">Phone</th>
                         <th onclick="sortTable(4)">Email</th>
                         <th onclick="sortTable(5)">Location</th>
@@ -700,6 +729,28 @@
                 star.style.animationDelay = Math.random() * 3 + 's';
                 starsContainer.appendChild(star);
             }
+        }
+
+        // Generate emoji rain
+        function createEmojiRain() {
+            const emojiRainContainer = document.getElementById('emojiRain');
+            const emojis = ['🐱', '🐸', '🦄', '🌸', '🌺', '🌼', '🌻', '🐈', '🐈‍⬛', '🦋'];
+
+            setInterval(() => {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.top = '-50px';
+                emoji.style.animationDuration = (Math.random() * 3 + 4) + 's';
+
+                emojiRainContainer.appendChild(emoji);
+
+                // Remove emoji after animation
+                setTimeout(() => {
+                    emoji.remove();
+                }, 7000);
+            }, 800);
         }
 
         // Load CSV data
@@ -1006,6 +1057,7 @@
 
         // Initialize
         createStars();
+        createEmojiRain();
         importFromCSV();
     </script>
 </body>

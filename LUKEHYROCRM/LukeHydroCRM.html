@@ -266,14 +266,23 @@
             transition: all 0.3s ease;
         }
 
-        tr:hover td {
+        tbody tr {
+            cursor: pointer;
+        }
+
+        tbody tr:hover td {
             background: rgba(138, 43, 226, 0.15);
             transform: scale(1.01);
+        }
+
+        tbody tr.starred {
+            background: rgba(255, 215, 0, 0.1);
         }
 
         .actions {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .btn-small {
@@ -296,6 +305,27 @@
             color: white;
         }
 
+        .btn-star {
+            background: transparent;
+            color: #ffd700;
+            font-size: 1.3em;
+            padding: 5px 10px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-star:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            transform: scale(1.2);
+        }
+
+        .btn-star.starred {
+            background: rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
         .btn-small:hover {
             transform: scale(1.1);
             box-shadow: 0 5px 15px rgba(138, 43, 226, 0.5);
@@ -312,15 +342,18 @@
             background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             backdrop-filter: blur(5px);
+            overflow-y: auto;
         }
 
         .modal-content {
             position: relative;
             background: linear-gradient(135deg, #1a0a2e 0%, #16213e 100%);
-            margin: 50px auto;
+            margin: 30px auto;
             padding: 40px;
-            width: 90%;
-            max-width: 700px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
             border-radius: 25px;
             border: 2px solid rgba(138, 43, 226, 0.5);
             box-shadow: 0 30px 80px rgba(138, 43, 226, 0.4);
@@ -552,6 +585,7 @@
             <table id="crmTable">
                 <thead>
                     <tr>
+                        <th style="width: 50px;">⭐</th>
                         <th onclick="sortTable(0)">Date</th>
                         <th onclick="sortTable(1)">Business</th>
                         <th onclick="sortTable(2)">Contact</th>
@@ -702,7 +736,8 @@
                             notes: values[6],
                             probability: values[7],
                             email: values[8],
-                            businessType: values[9]
+                            businessType: values[9],
+                            starred: false  // Initialize as not starred
                         });
                     }
                 }
@@ -735,10 +770,40 @@
         // Render table
         function renderTable(filteredContacts = null) {
             const tbody = document.getElementById('tableBody');
-            const displayContacts = filteredContacts || contacts;
+            let displayContacts = filteredContacts || contacts;
 
-            tbody.innerHTML = displayContacts.map((contact, index) => `
-                <tr>
+            // Sort: starred items first, then by original order
+            displayContacts = [...displayContacts].sort((a, b) => {
+                if (a.starred && !b.starred) return -1;
+                if (!a.starred && b.starred) return 1;
+                return 0;
+            });
+
+            tbody.innerHTML = '';
+            displayContacts.forEach((contact) => {
+                // Find the actual index in the contacts array
+                const actualIndex = contacts.findIndex(c => c === contact);
+
+                const tr = document.createElement('tr');
+                if (contact.starred) {
+                    tr.classList.add('starred');
+                }
+
+                // Add click handler to the row (but not on action buttons)
+                tr.addEventListener('click', (e) => {
+                    // Don't trigger if clicking on buttons
+                    if (!e.target.closest('.actions')) {
+                        editContact(actualIndex);
+                    }
+                });
+
+                tr.innerHTML = `
+                    <td>
+                        <button class="btn-small btn-star ${contact.starred ? 'starred' : ''}"
+                                onclick="event.stopPropagation(); toggleStar(${actualIndex})">
+                            ${contact.starred ? '⭐' : '☆'}
+                        </button>
+                    </td>
                     <td>${contact.date}</td>
                     <td><strong>${contact.business}</strong></td>
                     <td>${contact.pic}</td>
@@ -749,12 +814,14 @@
                     <td><span class="attempts-badge">${contact.attempts}</span></td>
                     <td><span class="probability">${contact.probability}</span></td>
                     <td>${contact.notes}</td>
-                    <td class="actions">
-                        <button class="btn-small btn-edit" onclick="editContact(${index})">Edit</button>
-                        <button class="btn-small btn-delete" onclick="deleteContact(${index})">Delete</button>
+                    <td class="actions" onclick="event.stopPropagation()">
+                        <button class="btn-small btn-edit" onclick="editContact(${actualIndex})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteContact(${actualIndex})">Delete</button>
                     </td>
-                </tr>
-            `).join('');
+                `;
+
+                tbody.appendChild(tr);
+            });
         }
 
         // Update stats
@@ -775,6 +842,12 @@
 
             const highProb = probabilities.filter(p => p > 60).length;
             document.getElementById('highProbability').textContent = highProb;
+        }
+
+        // Toggle star/favorite
+        function toggleStar(index) {
+            contacts[index].starred = !contacts[index].starred;
+            renderTable();
         }
 
         // Search functionality
@@ -873,7 +946,8 @@
                 notes: document.getElementById('notes').value,
                 probability: document.getElementById('probability').value,
                 email: document.getElementById('email').value,
-                businessType: document.getElementById('businessType').value
+                businessType: document.getElementById('businessType').value,
+                starred: editingIndex >= 0 ? contacts[editingIndex].starred : false
             };
 
             if (editingIndex >= 0) {

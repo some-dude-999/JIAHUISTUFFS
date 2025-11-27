@@ -716,6 +716,62 @@
         let contacts = [];
         let editingIndex = -1;
 
+        // Backend API configuration
+        const API_URL = 'http://localhost:5000/api';
+        let useBackend = true;
+
+        // Check if backend is available
+        async function checkBackend() {
+            try {
+                const response = await fetch(`${API_URL}/health`, { method: 'GET' });
+                useBackend = response.ok;
+                if (useBackend) {
+                    console.log('✅ Backend connected!');
+                } else {
+                    console.log('⚠️ Backend unavailable, using localStorage');
+                }
+            } catch (error) {
+                useBackend = false;
+                console.log('⚠️ Backend unavailable, using localStorage');
+            }
+        }
+
+        // Save to backend or localStorage
+        async function saveContacts() {
+            if (useBackend) {
+                try {
+                    const response = await fetch(`${API_URL}/contacts/bulk`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contacts })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log('💾 Saved to CSV');
+                    }
+                } catch (error) {
+                    console.error('❌ Failed to save to backend:', error);
+                    // Fallback to localStorage
+                    localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                }
+            } else {
+                // Save to localStorage
+                localStorage.setItem('lukeHydroCRM', JSON.stringify(contacts));
+                console.log('💾 Saved to localStorage');
+            }
+        }
+
+        // Load from localStorage
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem('lukeHydroCRM');
+            if (stored) {
+                contacts = JSON.parse(stored);
+                console.log('📂 Loaded from localStorage');
+                renderTable();
+                updateStats();
+            }
+        }
+
         // Generate stars
         function createStars() {
             const starsContainer = document.getElementById('stars');
@@ -755,15 +811,47 @@
 
         // Load CSV data
         async function importFromCSV() {
-            try {
-                const response = await fetch('LukeHydroCRM.csv');
-                const csvText = await response.text();
-                parseCSV(csvText);
-                renderTable();
-                updateStats();
-            } catch (error) {
-                console.error('Error loading CSV:', error);
-                alert('Could not load CSV file. Make sure LukeHydroCRM.csv is in the same directory.');
+            if (useBackend) {
+                try {
+                    const response = await fetch(`${API_URL}/contacts`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        contacts = data.contacts.map(c => ({
+                            date: c['Date Contacted'] || c.date || '',
+                            pic: c['PIC'] || c.pic || '',
+                            business: c['Business'] || c.business || '',
+                            number: c['Number'] || c.number || '',
+                            location: c['Location'] || c.location || '',
+                            attempts: c['Attempts'] || c.attempts || '0',
+                            notes: c['Notes'] || c.notes || '',
+                            probability: c['Probability'] || c.probability || '',
+                            email: c['Email'] || c.email || '',
+                            businessType: c['Business Type'] || c.businessType || '',
+                            starred: c.starred || false
+                        }));
+                        console.log('📥 Loaded from backend:', contacts.length, 'contacts');
+                        renderTable();
+                        updateStats();
+                    }
+                } catch (error) {
+                    console.error('Error loading from backend:', error);
+                    // Fallback to localStorage
+                    loadFromLocalStorage();
+                }
+            } else {
+                // Try loading from CSV file (for GitHub Pages)
+                try {
+                    const response = await fetch('LukeHydroCRM.csv');
+                    const csvText = await response.text();
+                    parseCSV(csvText);
+                    renderTable();
+                    updateStats();
+                } catch (error) {
+                    console.error('Error loading CSV:', error);
+                    // Fallback to localStorage
+                    loadFromLocalStorage();
+                }
             }
         }
 
@@ -899,6 +987,7 @@
         function toggleStar(index) {
             contacts[index].starred = !contacts[index].starred;
             renderTable();
+            saveContacts();
         }
 
         // Search functionality
@@ -1009,6 +1098,7 @@
 
             renderTable();
             updateStats();
+            saveContacts();
             closeModal();
         });
 
@@ -1017,6 +1107,7 @@
                 contacts.splice(index, 1);
                 renderTable();
                 updateStats();
+                saveContacts();
             }
         }
 
@@ -1056,9 +1147,14 @@
         }
 
         // Initialize
-        createStars();
-        createEmojiRain();
-        importFromCSV();
+        async function init() {
+            createStars();
+            createEmojiRain();
+            await checkBackend();
+            await importFromCSV();
+        }
+
+        init();
     </script>
 </body>
 </html>
